@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .phone-wrapper {
+            position: relative;
+            height: 100vh;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-area {
+            position: relative;
+            height: 100%;
+            aspect-ratio: 390 / 844;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Hotspot để soi vị trí - Chỉnh 0.3 thành 0 khi xong */
+        .hotspot {
+            position: absolute;
+            background: rgba(255, 0, 0, 0.3); 
+            border: 1px solid yellow;
+            cursor: pointer;
+            z-index: 50;
+        }
+
+        input.hotspot {
+            background: transparent;
+            border: none;
+        }
+    </style>
+</head>
+<body class="m-0 p-0 overflow-hidden">
+
+    <div class="phone-wrapper">
+        <div class="content-area">
+
+            <div id="step-1" class="absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/gateway.png" class="bg-img">
+                <div onclick="toStep2()" class="hotspot" style="top: 61.5%; left: 8%; width: 84%; height: 6.5%;"></div>
+            </div>
+
+    <div id="step-2" class="hidden absolute inset-0 z-20 fade-in">
+        <img src="../../assets/images/login_normal.png" class="bg-img">
+        
+        <input type="text" id="mssv" class="hotspot px-2" 
+            style="top: 25%; left: 13%; width: 74%; height: 3.5%;">
+        
+        <input type="password" id="pass" class="hotspot px-2" 
+            style="top: 33%; left: 13%; width: 74%; height: 3.5%;">
+        
+        <div onclick="handleAuth()" class="hotspot" 
+            style="top: 44%; left: 9.5%; width: 25%; height: 3.5%;"></div>
+        
+        <div onclick="document.getElementById('mssv').value='';document.getElementById('pass').value='';" 
+            class="hotspot" style="top: 44%; left: 36%; width: 11.5%; height: 3.5%;"></div>
+        
+        <div onclick="goToStart()" class="hotspot" 
+            style="top: 44%; left: 52%; width: 15%; height: 3.5%;"></div>
+    </div>
+
+    <div id="step-2-error" class="hidden absolute inset-0 z-30 fade-in">
+        <img src="../../assets/images/login_error.png" class="bg-img">
+        
+        <input type="text" id="mssv-retry" class="hotspot px-2" 
+            style="top: 24.2%; left: 13%; width: 74%; height: 3.5%;">
+        
+        <input type="password" id="pass-retry" class="hotspot px-2" 
+            style="top: 31.5%; left: 13%; width: 74%; height: 3.5%;">
+        
+        <div onclick="handleAuth(true)" class="hotspot" 
+            style="top: 44.8%; left: 13%; width: 22%; height: 3.5%;"></div>
+        
+        <div onclick="goToStart()" class="hotspot" 
+            style="top: 44.8%; left: 51%; width: 14%; height: 3.5%;"></div>
+    </div>
+
+            <div id="step-3" class="hidden absolute inset-0 z-40 fade-in">
+                <iframe id="figma-frame" src="" width="100%" height="100%" style="border:none;"></iframe>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toStep2() {
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.remove('hidden');
+        }
+
+        function goToStart() {
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-2-error').classList.add('hidden');
+            document.getElementById('step-1').classList.remove('hidden');
+        }
+
+        function handleAuth(isRetry = false) {
+            const u = isRetry ? document.getElementById('mssv-retry').value : document.getElementById('mssv').value;
+            const p = isRetry ? document.getElementById('pass-retry').value : document.getElementById('pass').value;
+
+            if (u === "2011234" && p === "123") {
+                document.getElementById('step-2').classList.add('hidden');
+                document.getElementById('step-2-error').classList.add('hidden');
+                document.getElementById('step-3').classList.remove('hidden');
+                // Nhớ dán link Dashboard Figma (Node-id 120-202) vào đây
+                document.getElementById('figma-frame').src = "https://embed.figma.com/proto/EqTiMLjbl0sKa76fC5Rwck/IoT-SPMS_Mockup_Final?node-id=120-202&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=120%3A202&show-proto-sidebar=0&embed-host=share";
+            } else {
+                document.getElementById('step-2').classList.add('hidden');
+                document.getElementById('step-2-error').classList.remove('hidden');
+                document.getElementById('mssv-retry').value = u;
+                document.getElementById('pass-retry').value = p;
+            }
+        }
+    </script>
+</body>
+</html>
