@@ -1,24 +1,9 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .fade-in {
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
         .wrapper {
             position: relative;
             height: 100vh;
@@ -30,82 +15,31 @@
 
         .content-area {
             position: relative;
-            height: 100%;
-            width: 100%;
-            aspect-ratio: 690 / 844;
-            background: #fff;
+            height: 90vh; /* Set a height for desktop view */
+            aspect-ratio: 390 / 844;
+            background: #000;
             overflow: hidden;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        .bg-img {
+        /* Make the iframe fill the container exactly */
+        iframe {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-        }
-
-        /* Hotspot để soi vị trí - Chỉnh 0.3 thành 0 khi xong */
-        .hotspot {
-            position: absolute;
-            background: rgba(255, 0, 0, 0.3);
-            border: 1px solid yellow;
-            cursor: pointer;
-            z-index: 50;
-        }
-
-        input.hotspot {
-            background: transparent;
             border: none;
         }
     </style>
 </head>
 
 <body class="m-0 p-0 overflow-hidden">
-
     <div class="wrapper">
         <div class="content-area">
-
-            <div id="no-user" class="absolute inset-0 z-10 fade-in">
-                <img src="../../assets/images/Signage_No-User.png" class="bg-img">
-                <div onclick="scanCard()" class="hotspot inset-0"></div>
-            </div>
-
-            <div id="user-active" class="hidden absolute inset-0 z-20 fade-in">
-                  <img src="../../assets/images/Signage_Active.png" class="bg-img">
-                <div onclick="backToIdle()" class="hotspot inset-0">
-                </div>
-            </div>
-
-            <div id="maintenance" class="hidden absolute inset-0 z-30 fade-in">
-                <img src="../../assets/images/Signage_Maintenance.png" class="bg-img">
-                <div onclick="backToIdle()" class="hotspot inset-0">
-                </div>
-            </div>
+            <iframe 
+                src="https://embed.figma.com/proto/EqTiMLjbl0sKa76fC5Rwck/IoT-SPMS_Mockup_Final?node-id=119-357&viewport=540%2C418%2C0.42&scaling=scale-down-fit&content-scaling=fixed&starting-point-node-id=119%3A357&page-id=69%3A25&embed-host=share&hide-ui=1&hotspot-hints=0" 
+                allowfullscreen>
+            </iframe>
         </div>
     </div>
-
-    <script>
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-
-        function scanCard() {
-            document.getElementById('no-user').classList.add('hidden');
-            const value = getRandomInt(1, 100);
-            //There's 30% chance that the server is broken
-            if (value < 70) {
-                document.getElementById('user-active').classList.remove('hidden');
-            }
-            else {
-                document.getElementById('maintenance').classList.remove('hidden');
-            }
-        }
-
-        function backToIdle() {
-            document.getElementById('user-active').classList.add('hidden');
-            document.getElementById('maintenance').classList.add('hidden');
-            document.getElementById('no-user').classList.remove('hidden');
-        }
-    </script>
 </body>
-
 </html>
