@@ -1,0 +1,48 @@
+.hotspot {
+    position: absolute;
+    cursor: pointer;
+    background: transparent;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.hotspot.dev {
+    outline: 2px dashed rgba(255, 0, 0, 0.6);
+    cursor: pointer;
+    background: transparent;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+.prototype-screen {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.prototype-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+.prototype-safe {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+}
