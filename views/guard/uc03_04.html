@@ -169,6 +169,36 @@
                     top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
                 </div>
             </div>
+
+            <!-- ================= MÀN HÌNH LỖI: ACCESS DENIED ================= -->
+            <div id="screen-access-denied" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Access_Denied.png" class="bg-img" alt="Access Denied">
+                
+                <!-- Nút Back tàng hình để quay lại màn hình chọn cổng -->
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= MÀN HÌNH LỖI: Exit DENIED ================= -->
+            <div id="screen-exit-denied" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Exit_Denied.png" class="bg-img" alt="Exit Denied">
+                
+                <!-- Nút Back tàng hình để quay lại màn hình chọn cổng -->
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= MÀN HÌNH LỖI: Ticket Not Found ================= -->
+            <div id="screen-ticket-not-found" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Ticket_Not_Found.png" class="bg-img" alt="Ticket Not Found">
+                
+                <!-- Nút Back tàng hình để quay lại màn hình chọn cổng -->
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -185,7 +215,10 @@
             document.getElementById('screen-visitor-scan').classList.add('hidden');
             document.getElementById('screen-bill').classList.add('hidden');
             document.getElementById('screen-bill-completed').classList.add('hidden');
-
+            document.getElementById('screen-access-denied').classList.add('hidden');
+            document.getElementById('screen-exit-denied').classList.add('hidden');
+            document.getElementById('screen-ticket-not-found').classList.add('hidden');
+            
             document.getElementById(screenId).classList.remove('hidden');
         }
 
@@ -197,7 +230,13 @@
                 showScreen('screen-processing-end');
 
                 setTimeout(() => {
-                    showScreen('screen-access-granted-enter');
+                    const isSuccess = Math.random() > 0.3; 
+
+                    if (isSuccess) {
+                        showScreen('screen-access-granted-enter'); 
+                    } else {
+                        showScreen('screen-access-denied');
+                    }
                 }, 1000);
 
             }, 1000);
@@ -210,7 +249,13 @@
                 showScreen('screen-processing-end');
 
                 setTimeout(() => {
-                    showScreen('screen-access-granted-exit');
+                    const isSuccess = Math.random() > 0.3; 
+
+                    if (isSuccess) {
+                        showScreen('screen-access-granted-exit');
+                    } else {
+                        showScreen('screen-exit-denied');
+                    }
                 }, 1000);
 
             }, 1000);
@@ -222,10 +267,16 @@
         
         function VisitorScan() {
             showScreen('screen-visitor-scan');
+            
         }
 
         function VisitorScanExit() {
-            showScreen('screen-bill');
+            const isSuccess = Math.random() > 0.3;
+            if (isSuccess) {
+                        showScreen('screen-bill');
+                    } else {
+                        showScreen('screen-ticket-not-found');
+                    }
         }
 
         function VisitorBill() {
