@@ -1,138 +1,3 @@
-<!-- 
-
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .fade-in { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .phone-wrapper {
-            position: relative;
-            height: 100vh;
-            background: #1a1a1a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .content-area {
-            position: relative;
-            height: 100%;
-            aspect-ratio: 390 / 844;
-            background: #fff;
-            overflow: hidden;
-        }
-
-        .bg-img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        /* Hotspot để soi vị trí - Chỉnh 0.3 thành 0 khi xong */
-        .hotspot {
-            position: absolute;
-            background: rgba(255, 0, 0, 0.3); 
-            border: 1px solid yellow;
-            cursor: pointer;
-            z-index: 50;
-        }
-
-        input.hotspot {
-            background: transparent;
-            border: none;
-        }
-    </style>
-</head>
-<body class="m-0 p-0 overflow-hidden">
-
-    <div class="phone-wrapper">
-        <div class="content-area">
-
-            <div id="step-1" class="absolute inset-0 z-10 fade-in">
-                <img src="../../assets/images/uc01_gateway.png" class="bg-img">
-                <div onclick="toStep2()" class="hotspot" style="top: 61.5%; left: 8%; width: 84%; height: 6.5%;"></div>
-            </div>
-
-            <div id="step-2" class="hidden absolute inset-0 z-20 fade-in">
-                <img src="../../assets/images/uc01_login_normal.png" class="bg-img">
-                
-                <input type="text" id="mssv" class="hotspot px-2" 
-                    style="top: 25%; left: 13%; width: 74%; height: 3.5%;">
-                
-                <input type="password" id="pass" class="hotspot px-2" 
-                    style="top: 33%; left: 13%; width: 74%; height: 3.5%;">
-                
-                <div onclick="handleAuth()" class="hotspot" 
-                    style="top: 44%; left: 9.5%; width: 25%; height: 3.5%;"></div>
-                
-                <div onclick="document.getElementById('mssv').value='';document.getElementById('pass').value='';" 
-                    class="hotspot" style="top: 44%; left: 36%; width: 11.5%; height: 3.5%;"></div>
-                
-                <div onclick="goToStart()" class="hotspot" 
-                    style="top: 44%; left: 52%; width: 15%; height: 3.5%;"></div>
-            </div>
-
-            <div id="step-2-error" class="hidden absolute inset-0 z-30 fade-in">
-                <img src="../../assets/images/uc01_login_error.png" class="bg-img">
-                
-                <input type="text" id="mssv-retry" class="hotspot px-2" 
-                    style="top: 24.2%; left: 13%; width: 74%; height: 3.5%;">
-                
-                <input type="password" id="pass-retry" class="hotspot px-2" 
-                    style="top: 31.5%; left: 13%; width: 74%; height: 3.5%;">
-                
-                <div onclick="handleAuth(true)" class="hotspot" 
-                    style="top: 44.8%; left: 13%; width: 22%; height: 3.5%;"></div>
-                
-                <div onclick="goToStart()" class="hotspot" 
-                    style="top: 44.8%; left: 51%; width: 14%; height: 3.5%;"></div>
-            </div>
-
-            <div id="step-3" class="hidden absolute inset-0 z-40 fade-in">
-                <img src="../../assets/images/uc02_dashboard.png" class="bg-img">
-                
-                <div onclick="goToStart()" class="hotspot" style="top: 3%; left: 3%; width: 15%; height: 5%;"></div>
-                
-                </div>
-    </div>
-
-    <script>
-        function toStep2() {
-            document.getElementById('step-1').classList.add('hidden');
-            document.getElementById('step-2').classList.remove('hidden');
-        }
-
-        function goToStart() {
-            document.getElementById('step-2').classList.add('hidden');
-            document.getElementById('step-2-error').classList.add('hidden');
-            document.getElementById('step-1').classList.remove('hidden');
-        }
-
-        function handleAuth(isRetry = false) {
-            const u = isRetry ? document.getElementById('mssv-retry').value : document.getElementById('mssv').value;
-            const p = isRetry ? document.getElementById('pass-retry').value : document.getElementById('pass').value;
-
-            if (u === "2011234" && p === "123") {
-                // Đăng nhập đúng: Hiện ảnh Dashboard
-                document.getElementById('step-2').classList.add('hidden');
-                document.getElementById('step-2-error').classList.add('hidden');
-                document.getElementById('step-3').classList.remove('hidden');
-            } else {
-                // Đăng nhập sai: Hiện màn lỗi
-                document.getElementById('step-2').classList.add('hidden');
-                document.getElementById('step-2-error').classList.remove('hidden');
-                document.getElementById('mssv-retry').value = u;
-                document.getElementById('pass-retry').value = p;
-            }
-        }
-    </script>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -199,6 +64,23 @@
             <div id="step-1" class="absolute inset-0 z-10 fade-in">
                 <img src="../../assets/images/uc01_gateway.png" class="bg-img">
                 <div onclick="toStep2()" class="hotspot" style="top: 61.5%; left: 8%; width: 84%; height: 6.5%;"></div>
+                <div onclick="VisitorWaiting()" class="hotspot" style="top: 71.5%; left: 8%; width: 84%; height: 6.5%;"></div>
+            </div>
+            
+            <div id="waiting" class="hidden absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/uc04_waiting.png" class="bg-img">
+            </div>
+
+            <div id="ticketrelease" class="hidden absolute inset-0 z-20 fade-in">
+                <img src="../../assets/images/uc04__ticketrelease.png" class="bg-img">
+            </div>
+
+            <div id="mobileticket" class="hidden absolute inset-0 z-30 fade-in">
+                <img src="../../assets/images/uc04_mobileticket.png" class="bg-img">
+                
+                
+                <div onclick="goToStart()" class="hotspot" style="top: 5%; left: 6%; width: 4%; height: 2%;"></div>
+                <!-- <div onclick="goToStart()" class="hotspot" style="top: 83.5%; left: 8%; width: 84%; height: 6.5%;"></div> -->
             </div>
 
             <div id="step-2" class="hidden absolute inset-0 z-20 fade-in">
@@ -254,6 +136,22 @@
             document.getElementById('step-2').classList.remove('hidden');
         }
 
+        function VisitorWaiting() {
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('waiting').classList.remove('hidden');
+
+            setTimeout(() => {
+                document.getElementById('waiting').classList.add('hidden');
+                document.getElementById('ticketrelease').classList.remove('hidden');
+
+                setTimeout(() => {
+                    document.getElementById('ticketrelease').classList.add('hidden');
+                    document.getElementById('mobileticket').classList.remove('hidden');
+                }, 1000);
+
+            }, 1000);
+        }
+
         function goToStart() {
             // Gửi lệnh thu nhỏ vỏ Simulator về màn hình điện thoại phòng trường hợp đang ở màn Admin
             window.parent.postMessage("switch-to-mobile", "*");
@@ -262,6 +160,10 @@
             document.getElementById('step-2-error').classList.add('hidden');
             document.getElementById('step-3').classList.add('hidden');
             document.getElementById('step-1').classList.remove('hidden');
+
+            document.getElementById('waiting').classList.add('hidden');
+            document.getElementById('ticketrelease').classList.add('hidden');
+            document.getElementById('mobileticket').classList.add('hidden');
         }
 
         function handleAuth(isRetry = false) {
