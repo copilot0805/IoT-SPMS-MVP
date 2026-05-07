@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UC03 Gate (1440x1024) - Auto Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .wrapper {
+            position: relative;
+            height: 100vh;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-area {
+            position: relative;
+            height: 100%;
+            aspect-ratio: 1440 / 1024; 
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .hotspot {
+            position: absolute;
+            background: rgba(255, 0, 0, 0.3); /* Chỉnh alpha về 0 khi test xong */
+            border: 1px solid yellow; /* Bỏ dòng này khi test xong */
+            cursor: pointer;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="m-0 p-0 overflow-hidden">
+
+    <div class="wrapper">
+        <div class="content-area">
+
+            <!-- ================= MÀN HÌNH 1: CHỌN CỔNG ================= -->
+            <div id="screen-main" class="absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/uc03_04_gate.png" class="bg-img" alt="Gate">
+                
+                <div class="hotspot dev" onclick="showScreen('screen-idle-enter')" style="
+                    top: 42.5%; left: 27.65%; width: 46.5%; height: 9.77%;">
+                </div>
+                
+                <div class="hotspot dev" onclick="showScreen('screen-idle-exit')" style="
+                    top: 54.5%; left: 27.65%; width: 46.5%; height: 9.77%;">
+                </div>
+            </div>
+
+            <!-- ================= MÀN HÌNH 2: IDLE ENTER ================= -->
+            <div id="screen-idle-enter" class="hidden absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/uc03_idle_enter.png" class="bg-img" alt="Idle Enter">
+                
+                <!-- Đã thêm onclick="handleScanCard()" -->
+                <div class="hotspot dev" onclick="handleScanCardEnter()" data-action="scan-card" style="
+                    top: 38.97%; left: 31.25%; width: 38.61%; height: 34.11%;">
+                </div>
+                
+                <div class="hotspot dev" onclick="VisitorTicket()" data-action="get-temp-ticket" style="
+                    top: 79.40%; left: 36%; width: 28%; height: 9.8%;">
+                </div>
+                
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= MÀN HÌNH 3: IDLE EXIT ================= -->
+            <div id="screen-idle-exit" class="hidden absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/uc03_idle_exit.png" class="bg-img" alt="Idle Exit">
+                
+                <!-- Đã thêm onclick="handleScanCardExit()" -->
+                <div class="hotspot dev" onclick="handleScanCardExit()" data-action="scan-card" style="
+                    top: 38.97%; left: 31.25%; width: 38.61%; height: 34.11%;">
+                </div>
+                
+                <div class="hotspot dev" onclick="VisitorScan()" data-action="scan-ticket" style="
+                    top: 81.5%; left: 37.8%; width: 24.5%; height: 9.3%;">
+                </div>
+                
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= MÀN HÌNH 4: PROCESSING (START) ================= -->
+            <!-- Chú ý: Đổi tên file ảnh cho đúng với project của bạn -->
+            <div id="screen-processing-start" class="hidden absolute inset-0 z-20 fade-in">
+                <img src="../../assets/images/uc04_Processing_Enter (start).png" class="bg-img" alt="Processing Start">
+            </div>
+
+            <!-- ================= MÀN HÌNH 5: PROCESSING (END) ================= -->
+            <!-- Chú ý: Đổi tên file ảnh cho đúng với project của bạn -->
+            <div id="screen-processing-end" class="hidden absolute inset-0 z-30 fade-in">
+                <img src="../../assets/images/uc04_Processing_Enter (end).png" class="bg-img" alt="Processing End">
+            </div>
+
+            <!-- ================= MÀN HÌNH 6: ACCESS GRANTED Enter ================= -->
+            <!-- Chú ý: Đổi tên file ảnh cho đúng với project của bạn -->
+            <div id="screen-access-granted-enter" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Access_Granted_Enter.png" class="bg-img" alt="Access Granted">
+                
+                <div class="hotspot dev" onclick="VisitorTicket()" data-action="scan-ticket" style="
+                    top: 81.4%; left: 39.2%; width: 24.6%; height: 8.8%;">
+                </div>
+                <!-- Nút Back tàng hình ở màn hình thành công để quay lại màn hình chọn cổng -->
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= MÀN HÌNH 7: ACCESS GRANTED Exit ================= -->
+            <!-- Chú ý: Đổi tên file ảnh cho đúng với project của bạn -->
+            <div id="screen-access-granted-exit" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Access_Granted_Exit.png" class="bg-img" alt="Access Granted">
+                
+                <!-- Nút Back tàng hình ở màn hình thành công để quay lại màn hình chọn cổng -->
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= MÀN HÌNH 8: Visitor Ticket ================= -->
+            <!-- Chú ý: Đổi tên file ảnh cho đúng với project của bạn -->
+            <div id="screen-visitor-ticket" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_VisitorTicket.png" class="bg-img" alt="Visitor Ticket">
+                
+                <!-- Nút Back tàng hình ở màn hình thành công để quay lại màn hình chọn cổng -->
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= MÀN HÌNH 9: Visitor Scan ================= -->
+            <!-- Chú ý: Đổi tên file ảnh cho đúng với project của bạn -->
+            <div id="screen-visitor-scan" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Request_Scanning.png" class="bg-img" alt="Visitor Scan">
+                
+                <div class="hotspot dev" onclick="VisitorScanExit()" data-action="scan-card" style="
+                    top: 45%; left: 31.25%; width: 38.61%; height: 38%;">
+                </div>
+
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= MÀN HÌNH 10: Bill ================= -->
+            <!-- Chú ý: Đổi tên file ảnh cho đúng với project của bạn -->
+            <div id="screen-bill" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Bill.png" class="bg-img" alt="Bill">
+                
+                <div class="hotspot dev" onclick="VisitorBill()" style="
+                    top: 45%; left: 10.9%; width: 23.8%; height: 33.5%; z-index: 99;">
+                </div>
+
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= MÀN HÌNH 11: Bill Completed ================= -->
+            <!-- Chú ý: Đổi tên file ảnh cho đúng với project của bạn -->
+            <div id="screen-bill-completed" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Bill_Completed.png" class="bg-img" alt="Bill Completed">
+
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script điều khiển chuyển màn hình và xử lý logic delay -->
+    <script>
+        // Hàm hiển thị màn hình cụ thể và ẩn tất cả các màn hình còn lại
+        function showScreen(screenId) {
+            document.getElementById('screen-main').classList.add('hidden');
+            document.getElementById('screen-idle-enter').classList.add('hidden');
+            document.getElementById('screen-idle-exit').classList.add('hidden');
+            document.getElementById('screen-processing-start').classList.add('hidden');
+            document.getElementById('screen-processing-end').classList.add('hidden');
+            document.getElementById('screen-access-granted-enter').classList.add('hidden');
+            document.getElementById('screen-access-granted-exit').classList.add('hidden');
+            document.getElementById('screen-visitor-ticket').classList.add('hidden');
+            document.getElementById('screen-visitor-scan').classList.add('hidden');
+            document.getElementById('screen-bill').classList.add('hidden');
+            document.getElementById('screen-bill-completed').classList.add('hidden');
+            
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        // Hàm xử lý luồng khi click Scan Card
+        function handleScanCardEnter() {
+            // 1. Hiển thị Processing (Start) ngay lập tức
+            showScreen('screen-processing-start');
+
+            // 2. Chờ 1000ms (1 giây) rồi hiển thị Processing (End)
+            setTimeout(() => {
+                showScreen('screen-processing-end');
+
+                // 3. Chờ thêm 1000ms nữa rồi hiển thị Access Granted
+                setTimeout(() => {
+                    showScreen('screen-access-granted-enter');
+                }, 1000);
+
+            }, 1000);
+        }
+
+        function handleScanCardExit() {
+            // 1. Hiển thị Processing (Start) ngay lập tức
+            showScreen('screen-processing-start');
+
+            // 2. Chờ 1000ms (1 giây) rồi hiển thị Processing (End)
+            setTimeout(() => {
+                showScreen('screen-processing-end');
+
+                // 3. Chờ thêm 1000ms nữa rồi hiển thị Access Granted
+                setTimeout(() => {
+                    showScreen('screen-access-granted-exit');
+                }, 1000);
+
+            }, 1000);
+        }
+
+        function VisitorTicket() {
+            showScreen('screen-visitor-ticket');
+        }
+        
+        function VisitorScan() {
+            showScreen('screen-visitor-scan');
+        }
+
+        function VisitorScanExit() {
+            showScreen('screen-bill');
+        }
+
+        function VisitorBill() {
+            showScreen('screen-bill-completed');
+        }
+    </script>
+    
+</body>
+</html>
