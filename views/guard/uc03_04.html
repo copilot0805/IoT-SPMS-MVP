@@ -34,10 +34,17 @@
 
         .hotspot {
             position: absolute;
-            background: rgba(255, 0, 0, 0.3);
-            border: 1px solid yellow;
             cursor: pointer;
-            z-index: 50;
+            background: transparent;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        /* !!!! Uncomment hospot.dev when demo (Purpose is to hide the button) !!!! */
+        .hotspot.dev {
+            outline: 2px dashed rgba(255, 0, 0, 0.6);
+            cursor: pointer;
+            background: transparent;
         }
     </style>
 </head>
@@ -46,9 +53,9 @@
     <div class="wrapper">
         <div class="content-area">
 
-            <!-- ================= MÀN HÌNH 1: CHỌN CỔNG ================= -->
+            <!-- ================= SCREEN 1: CHOOSE GATE ================= -->
             <div id="screen-main" class="absolute inset-0 z-10 fade-in">
-                <img src="../../assets/images/uc03_04_gate.png" class="bg-img" alt="Gate">
+                <img src="../../assets/images/uc03_04_Choose_Gate.png" class="bg-img" alt="Gate">
                 
                 <div class="hotspot dev" onclick="showScreen('screen-idle-enter')" style="
                     top: 42.5%; left: 27.65%; width: 46.5%; height: 9.77%;">
@@ -59,9 +66,9 @@
                 </div>
             </div>
 
-            <!-- ================= MÀN HÌNH 2: IDLE ENTER ================= -->
+            <!-- ================= SCREEN 2: IDLE ENTER ================= -->
             <div id="screen-idle-enter" class="hidden absolute inset-0 z-10 fade-in">
-                <img src="../../assets/images/uc03_idle_enter.png" class="bg-img" alt="Idle Enter">
+                <img src="../../assets/images/uc03_Idle_Enter.png" class="bg-img" alt="Idle Enter">
                 
                 <div class="hotspot dev" onclick="handleScanCardEnter()" data-action="scan-card" style="
                     top: 38.97%; left: 31.25%; width: 38.61%; height: 34.11%;">
@@ -76,9 +83,9 @@
                 </div>
             </div>
 
-            <!-- ================= MÀN HÌNH 3: IDLE EXIT ================= -->
+            <!-- ================= SCREEN 3: IDLE EXIT ================= -->
             <div id="screen-idle-exit" class="hidden absolute inset-0 z-10 fade-in">
-                <img src="../../assets/images/uc03_idle_exit.png" class="bg-img" alt="Idle Exit">
+                <img src="../../assets/images/uc03_Idle_Exit.png" class="bg-img" alt="Idle Exit">
                 
                 <div class="hotspot dev" onclick="handleScanCardExit()" data-action="scan-card" style="
                     top: 38.97%; left: 31.25%; width: 38.61%; height: 34.11%;">
@@ -93,49 +100,58 @@
                 </div>
             </div>
 
-            <!-- ================= MÀN HÌNH 4: PROCESSING (START) ================= -->
+            <!-- ================= PROCESSING (START) ================= -->
             <div id="screen-processing-start" class="hidden absolute inset-0 z-20 fade-in">
-                <img src="../../assets/images/uc04_Processing_Enter (start).png" class="bg-img" alt="Processing Start">
+                <img src="../../assets/images/uc03_Processing_Enter (start).png" class="bg-img" alt="Processing Start">
             </div>
 
-            <!-- ================= MÀN HÌNH 5: PROCESSING (END) ================= -->
+            <!-- ================= SCREEN 5: PROCESSING (END) ================= -->
             <div id="screen-processing-end" class="hidden absolute inset-0 z-30 fade-in">
-                <img src="../../assets/images/uc04_Processing_Enter (end).png" class="bg-img" alt="Processing End">
+                <img src="../../assets/images/uc03_Processing_Enter (end).png" class="bg-img" alt="Processing End">
             </div>
 
-            <!-- ================= MÀN HÌNH 6: ACCESS GRANTED Enter ================= -->
+            <!-- ================= ENTER GRANTED ================= -->
             <div id="screen-access-granted-enter" class="hidden absolute inset-0 z-40 fade-in">
-                <img src="../../assets/images/uc04_Access_Granted_Enter.png" class="bg-img" alt="Access Granted">
+                <img src="../../assets/images/uc03_Enter_Granted.png" class="bg-img" alt="Access Granted">
                 
-                <div class="hotspot dev" onclick="VisitorTicket()" data-action="scan-ticket" style="
+                <div class="hotspot dev" onclick="DisplayMemSlot()" data-action="scan-ticket" style="
                     top: 81.4%; left: 39.2%; width: 24.6%; height: 8.8%;">
                 </div>
+                
                 <div class="hotspot dev" onclick="showScreen('screen-main')" style="
                     top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
                 </div>
             </div>
 
-            <!-- ================= MÀN HÌNH 7: ACCESS GRANTED Exit ================= -->
+            <!-- ================= DISPLAY SLOT FOR MEMBER ================= -->
+            <div id="screen-mem-slot" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc03_Display_Slot_Mem.png" class="bg-img" alt="Member Slot">
+
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= SCREEN 7: EXIT GRANTED ================= -->
             <div id="screen-access-granted-exit" class="hidden absolute inset-0 z-40 fade-in">
-                <img src="../../assets/images/uc04_Access_Granted_Exit.png" class="bg-img" alt="Access Granted">
+                <img src="../../assets/images/uc03_Exit_Granted.png" class="bg-img" alt="Exit Granted">
                 
-                <!-- Nút Back tàng hình ở màn hình thành công để quay lại màn hình chọn cổng -->
+                <!-- Back button to go screen main -->
                 <div class="hotspot dev" onclick="showScreen('screen-main')" style="
                     top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
                 </div>
             </div>
 
-            <!-- ================= MÀN HÌNH 8: Visitor Ticket ================= -->
+            <!-- ================= SCREEN 8: Visitor Ticket ================= -->
             <div id="screen-visitor-ticket" class="hidden absolute inset-0 z-40 fade-in">
-                <img src="../../assets/images/uc04_VisitorTicket.png" class="bg-img" alt="Visitor Ticket">
+                <img src="../../assets/images/uc04_Display_Slot_Visitor.png" class="bg-img" alt="Visitor Ticket">
                 
-                <!-- Nút Back tàng hình ở màn hình thành công để quay lại màn hình chọn cổng -->
                 <div class="hotspot dev" onclick="showScreen('screen-main')" style="
                     top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
                 </div>
             </div>
 
-            <!-- ================= MÀN HÌNH 9: Visitor Scan ================= -->
+            <!-- ================= SCREEN 9: Visitor Scan ================= -->
             <div id="screen-visitor-scan" class="hidden absolute inset-0 z-40 fade-in">
                 <img src="../../assets/images/uc04_Request_Scanning.png" class="bg-img" alt="Visitor Scan">
                 
@@ -148,7 +164,7 @@
                 </div>
             </div>
 
-            <!-- ================= MÀN HÌNH 10: Bill ================= -->
+            <!-- ================= SCREEN 10: Bill ================= -->
             <div id="screen-bill" class="hidden absolute inset-0 z-40 fade-in">
                 <img src="../../assets/images/uc04_Bill.png" class="bg-img" alt="Bill">
                 
@@ -161,7 +177,7 @@
                 </div>
             </div>
 
-            <!-- ================= MÀN HÌNH 11: Bill Completed ================= -->
+            <!-- ================= SCREEN 11: Bill Completed ================= -->
             <div id="screen-bill-completed" class="hidden absolute inset-0 z-40 fade-in">
                 <img src="../../assets/images/uc04_Bill_Completed.png" class="bg-img" alt="Bill Completed">
 
@@ -170,31 +186,28 @@
                 </div>
             </div>
 
-            <!-- ================= MÀN HÌNH LỖI: ACCESS DENIED ================= -->
+            <!-- ================= ERROR SCREEN: ACCESS DENIED ================= -->
             <div id="screen-access-denied" class="hidden absolute inset-0 z-40 fade-in">
-                <img src="../../assets/images/uc04_Access_Denied.png" class="bg-img" alt="Access Denied">
+                <img src="../../assets/images/uc03_Enter_Denied.png" class="bg-img" alt="Access Denied">
                 
-                <!-- Nút Back tàng hình để quay lại màn hình chọn cổng -->
                 <div class="hotspot dev" onclick="showScreen('screen-main')" style="
                     top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
                 </div>
             </div>
 
-            <!-- ================= MÀN HÌNH LỖI: Exit DENIED ================= -->
+            <!-- ================= ERROR SCREEN: Exit DENIED ================= -->
             <div id="screen-exit-denied" class="hidden absolute inset-0 z-40 fade-in">
-                <img src="../../assets/images/uc04_Exit_Denied.png" class="bg-img" alt="Exit Denied">
+                <img src="../../assets/images/uc03_Exit_Denied.png" class="bg-img" alt="Exit Denied">
                 
-                <!-- Nút Back tàng hình để quay lại màn hình chọn cổng -->
                 <div class="hotspot dev" onclick="showScreen('screen-main')" style="
                     top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
                 </div>
             </div>
 
-            <!-- ================= MÀN HÌNH LỖI: Ticket Not Found ================= -->
+            <!-- ================= ERROR SCREEN: Ticket Not Found ================= -->
             <div id="screen-ticket-not-found" class="hidden absolute inset-0 z-40 fade-in">
                 <img src="../../assets/images/uc04_Ticket_Not_Found.png" class="bg-img" alt="Ticket Not Found">
                 
-                <!-- Nút Back tàng hình để quay lại màn hình chọn cổng -->
                 <div class="hotspot dev" onclick="showScreen('screen-main')" style="
                     top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
                 </div>
@@ -211,6 +224,7 @@
             document.getElementById('screen-processing-end').classList.add('hidden');
             document.getElementById('screen-access-granted-enter').classList.add('hidden');
             document.getElementById('screen-access-granted-exit').classList.add('hidden');
+            document.getElementById('screen-mem-slot').classList.add('hidden');
             document.getElementById('screen-visitor-ticket').classList.add('hidden');
             document.getElementById('screen-visitor-scan').classList.add('hidden');
             document.getElementById('screen-bill').classList.add('hidden');
@@ -222,7 +236,7 @@
             document.getElementById(screenId).classList.remove('hidden');
         }
 
-        // Hàm xử lý luồng khi click Scan Card
+        // Funtion handle flow when click Scan Card
         function handleScanCardEnter() {
             showScreen('screen-processing-start');
 
@@ -263,6 +277,10 @@
 
         function VisitorTicket() {
             showScreen('screen-visitor-ticket');
+        }
+
+        function DisplayMemSlot() {
+            showScreen('screen-mem-slot');
         }
         
         function VisitorScan() {
