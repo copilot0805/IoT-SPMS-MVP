@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Electronic Signage (No user) */
 .electronic-signage {
     position: relative;
@@ -136,4 +137,27 @@
 
 .bike-subtract-gray {
     background: #D9D9D9;
+=======
+.hotspot {
+    position: absolute;
+    cursor: pointer;
+    background: transparent;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.hotspot.dev {
+    outline: 2px dashed rgba(255, 0, 0, 0.6);
+    cursor: pointer;
+    background: transparent;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+>>>>>>> origin/feat/u03
 }
