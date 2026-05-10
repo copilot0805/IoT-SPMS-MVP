@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .wrapper {
+            position: relative;
+            height: 100vh;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-area {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            aspect-ratio: 690 / 844;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Hotspot để soi vị trí - Chỉnh 0.3 thành 0 khi xong */
+        .hotspot {
+            position: absolute;
+            background: rgba(255, 0, 0, 0);
+            border: 1px solid yellow;
+            cursor: pointer;
+            z-index: 50;
+        }
+
+        input.hotspot {
+            background: transparent;
+            border: none;
+        }
+    </style>
+</head>
+
+<body class="m-0 p-0 overflow-hidden">
+
+    <div class="wrapper">
+        <div class="content-area">
+
+            <div id="no-user" class="absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/uc06_Signage_No-User.png" class="bg-img">
+                <div onclick="scanCard()" class="hotspot inset-0"></div>
+            </div>
+
+            <div id="user-active" class="hidden absolute inset-0 z-20 fade-in">
+                  <img src="../../assets/images/uc06_Signage_Active.png" class="bg-img">
+                <div onclick="backToIdle()" class="hotspot inset-0">
+                </div>
+            </div>
+
+            <div id="maintenance" class="hidden absolute inset-0 z-30 fade-in">
+                <img src="../../assets/images/uc06_Signage_Maintenance.png" class="bg-img">
+                <div onclick="backToIdle()" class="hotspot inset-0">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function scanCard() {
+            document.getElementById('no-user').classList.add('hidden');
+            const value = getRandomInt(1, 100);
+            //There's 30% chance that the server is broken
+            if (value < 70) {
+                document.getElementById('user-active').classList.remove('hidden');
+            }
+            else {
+                document.getElementById('maintenance').classList.remove('hidden');
+            }
+        }
+
+        function backToIdle() {
+            document.getElementById('user-active').classList.add('hidden');
+            document.getElementById('maintenance').classList.add('hidden');
+            document.getElementById('no-user').classList.remove('hidden');
+        }
+    </script>
+</body>
+
+</html>
