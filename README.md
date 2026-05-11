@@ -49,4 +49,4 @@
 * Xóa LocalStorage: Nếu luồng bị kẹt, nhấn `F12` -> Application -> Storage -> Local Storage -> Xóa các key `gate_event`, `visitor_event`, `student_payment` để reset lại từ đầu.
 
 ## 👥 Contributors
-Developed by the CE & CS Engineering Team @ HCMUT.
+Developed by the CE Engineering Team @ HCMUT.
