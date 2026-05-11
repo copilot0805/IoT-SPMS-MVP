@@ -109,12 +109,7 @@
         // ======== THÊM ĐOẠN NÀY ĐỂ BẢNG LED NHẬN TÍN HIỆU ========
         window.addEventListener('storage', function(e) {
             if (e.key === 'gate_event' && e.newValue.includes('vehicle_in')) {
-                // Ẩn màn hình chờ và lỗi
-                document.getElementById('no-user').classList.add('hidden');
-                document.getElementById('maintenance').classList.add('hidden');
-                
-                // Hiện màn hình LED màu xanh
-                document.getElementById('user-active').classList.remove('hidden');
+                scanCard();
                 
                 // Tự động tắt LED, quay về màn hình chờ sau 5 giây
                 setTimeout(backToIdle, 5000);
