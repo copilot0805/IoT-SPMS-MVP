@@ -280,6 +280,7 @@
         }
 
         function VisitorTicket() {
+            localStorage.setItem('gate_event', 'vehicle_in_' + Date.now());
             showScreen('screen-visitor-ticket');
         }
 
