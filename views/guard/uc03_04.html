@@ -248,6 +248,10 @@
 
                     if (isSuccess) {
                         showScreen('screen-access-granted-enter'); 
+                        // ======== THÊM ĐOẠN NÀY ĐỂ PHÁT TÍN HIỆU ========
+                        // Kèm theo thời gian (Date.now) để chắc chắn mỗi lần quét là một tín hiệu mới
+                        localStorage.setItem('gate_event', 'vehicle_in_' + Date.now());
+                        // ===============================================
                     } else {
                         showScreen('screen-access-denied');
                     }
@@ -288,17 +292,32 @@
             
         }
 
+        // function VisitorScanExit() {
+        //     const isSuccess = Math.random() > 0.3;
+        //     if (isSuccess) {
+        //                 showScreen('screen-bill');
+        //             } else {
+        //                 showScreen('screen-ticket-not-found');
+        //             }
+        // }
+
+        // function VisitorBill() {
+        //     showScreen('screen-bill-completed');
+        // }
+
+        // Hàm xử lý khi Khách bấm vào vùng "Quét vé ra"
         function VisitorScanExit() {
-            const isSuccess = Math.random() > 0.3;
-            if (isSuccess) {
-                        showScreen('screen-bill');
-                    } else {
-                        showScreen('screen-ticket-not-found');
-                    }
+            // Luôn cho thành công để demo mượt
+            showScreen('screen-bill'); // Hiện màn hình chuyển khoản (uc04_Bill.png)
         }
 
+        // Hàm xử lý khi Khách đã chuyển khoản xong (bấm vào vùng Bill trên Kiosk)
         function VisitorBill() {
-            showScreen('screen-bill-completed');
+            showScreen('screen-bill-completed'); // Hiện màn hình "Thanh toán thành công"
+            
+            // ======== PHÁT TÍN HIỆU THANH TOÁN XONG ========
+            localStorage.setItem('visitor_event', 'payment_success_' + Date.now());
+            // ===============================================
         }
     </script>
     
