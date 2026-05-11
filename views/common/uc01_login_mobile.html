@@ -64,6 +64,7 @@
             <div id="step-1" class="absolute inset-0 z-10 fade-in">
                 <img src="../../assets/images/uc01_gateway.png" class="bg-img">
                 <div onclick="toStep2()" class="hotspot" style="top: 61.5%; left: 8%; width: 84%; height: 6.5%;"></div>
+<<<<<<< HEAD
                 <div onclick="VisitorWaiting()" class="hotspot" style="top: 71.5%; left: 8%; width: 84%; height: 6.5%;"></div>
             </div>
             
@@ -81,6 +82,8 @@
                 
                 <div onclick="goToStart()" class="hotspot" style="top: 5%; left: 6%; width: 4%; height: 2%;"></div>
                 <!-- <div onclick="goToStart()" class="hotspot" style="top: 83.5%; left: 8%; width: 84%; height: 6.5%;"></div> -->
+=======
+>>>>>>> origin/uc7
             </div>
 
             <div id="step-2" class="hidden absolute inset-0 z-20 fade-in">
@@ -136,6 +139,7 @@
             document.getElementById('step-2').classList.remove('hidden');
         }
 
+<<<<<<< HEAD
         function VisitorWaiting() {
             document.getElementById('step-1').classList.add('hidden');
             document.getElementById('waiting').classList.remove('hidden');
@@ -152,6 +156,8 @@
             }, 1000);
         }
 
+=======
+>>>>>>> origin/uc7
         function goToStart() {
             // Gửi lệnh thu nhỏ vỏ Simulator về màn hình điện thoại phòng trường hợp đang ở màn Admin
             window.parent.postMessage("switch-to-mobile", "*");
@@ -160,10 +166,13 @@
             document.getElementById('step-2-error').classList.add('hidden');
             document.getElementById('step-3').classList.add('hidden');
             document.getElementById('step-1').classList.remove('hidden');
+<<<<<<< HEAD
 
             document.getElementById('waiting').classList.add('hidden');
             document.getElementById('ticketrelease').classList.add('hidden');
             document.getElementById('mobileticket').classList.add('hidden');
+=======
+>>>>>>> origin/uc7
         }
 
         function handleAuth(isRetry = false) {
