@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UC03 Gate (1440x1024) - Auto Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .wrapper {
+            position: relative;
+            height: 100vh;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-area {
+            position: relative;
+            height: 100%;
+            aspect-ratio: 1440 / 1024; 
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .hotspot {
+            position: absolute;
+            cursor: pointer;
+            background: transparent;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        /* !!!! Uncomment hospot.dev when demo (Purpose is to hide the button) !!!! */
+        .hotspot.dev {
+            outline: 2px dashed rgba(255, 0, 0, 0.6);
+            cursor: pointer;
+            background: transparent;
+        }
+    </style>
+</head>
+<body class="m-0 p-0 overflow-hidden">
+
+    <div class="wrapper">
+        <div class="content-area">
+
+            <!-- ================= SCREEN 1: CHOOSE GATE ================= -->
+            <div id="screen-main" class="absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/uc03_04_Choose_Gate.png" class="bg-img" alt="Gate">
+                
+                <div class="hotspot dev" onclick="showScreen('screen-idle-enter')" style="
+                    top: 42.5%; left: 27.65%; width: 46.5%; height: 9.77%;">
+                </div>
+                
+                <div class="hotspot dev" onclick="showScreen('screen-idle-exit')" style="
+                    top: 54.5%; left: 27.65%; width: 46.5%; height: 9.77%;">
+                </div>
+            </div>
+
+            <!-- ================= SCREEN 2: IDLE ENTER ================= -->
+            <div id="screen-idle-enter" class="hidden absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/uc03_Idle_Enter.png" class="bg-img" alt="Idle Enter">
+                
+                <div class="hotspot dev" onclick="handleScanCardEnter()" data-action="scan-card" style="
+                    top: 38.97%; left: 31.25%; width: 38.61%; height: 34.11%;">
+                </div>
+                
+                <div class="hotspot dev" onclick="VisitorTicket()" data-action="get-temp-ticket" style="
+                    top: 79.40%; left: 36%; width: 28%; height: 9.8%;">
+                </div>
+                
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= SCREEN 3: IDLE EXIT ================= -->
+            <div id="screen-idle-exit" class="hidden absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/uc03_Idle_Exit.png" class="bg-img" alt="Idle Exit">
+                
+                <div class="hotspot dev" onclick="handleScanCardExit()" data-action="scan-card" style="
+                    top: 38.97%; left: 31.25%; width: 38.61%; height: 34.11%;">
+                </div>
+                
+                <div class="hotspot dev" onclick="VisitorScan()" data-action="scan-ticket" style="
+                    top: 81.5%; left: 37.8%; width: 24.5%; height: 9.3%;">
+                </div>
+                
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= PROCESSING (START) ================= -->
+            <div id="screen-processing-start" class="hidden absolute inset-0 z-20 fade-in">
+                <img src="../../assets/images/uc03_Processing_Enter (start).png" class="bg-img" alt="Processing Start">
+            </div>
+
+            <!-- ================= SCREEN 5: PROCESSING (END) ================= -->
+            <div id="screen-processing-end" class="hidden absolute inset-0 z-30 fade-in">
+                <img src="../../assets/images/uc03_Processing_Enter (end).png" class="bg-img" alt="Processing End">
+            </div>
+
+            <!-- ================= ENTER GRANTED ================= -->
+            <div id="screen-access-granted-enter" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc03_Enter_Granted.png" class="bg-img" alt="Access Granted">
+                
+                <div class="hotspot dev" onclick="DisplayMemSlot()" data-action="scan-ticket" style="
+                    top: 81.4%; left: 39.2%; width: 24.6%; height: 8.8%;">
+                </div>
+                
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= DISPLAY SLOT FOR MEMBER ================= -->
+            <div id="screen-mem-slot" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc03_Display_Slot_Mem.png" class="bg-img" alt="Member Slot">
+
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= SCREEN 7: EXIT GRANTED ================= -->
+            <div id="screen-access-granted-exit" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc03_Exit_Granted.png" class="bg-img" alt="Exit Granted">
+                
+                <!-- Back button to go screen main -->
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= SCREEN 8: Visitor Ticket ================= -->
+            <div id="screen-visitor-ticket" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Display_Slot_Visitor.png" class="bg-img" alt="Visitor Ticket">
+                
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= SCREEN 9: Visitor Scan ================= -->
+            <div id="screen-visitor-scan" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Request_Scanning.png" class="bg-img" alt="Visitor Scan">
+                
+                <div class="hotspot dev" onclick="VisitorScanExit()" data-action="scan-card" style="
+                    top: 45%; left: 31.25%; width: 38.61%; height: 38%;">
+                </div>
+
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= SCREEN 10: Bill ================= -->
+            <div id="screen-bill" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Bill.png" class="bg-img" alt="Bill">
+                
+                <div class="hotspot dev" onclick="VisitorBill()" style="
+                    top: 45%; left: 10.9%; width: 23.8%; height: 33.5%; z-index: 99;">
+                </div>
+
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= SCREEN 11: Bill Completed ================= -->
+            <div id="screen-bill-completed" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Bill_Completed.png" class="bg-img" alt="Bill Completed">
+
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= ERROR SCREEN: ACCESS DENIED ================= -->
+            <div id="screen-access-denied" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc03_Enter_Denied.png" class="bg-img" alt="Access Denied">
+                
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= ERROR SCREEN: Exit DENIED ================= -->
+            <div id="screen-exit-denied" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc03_Exit_Denied.png" class="bg-img" alt="Exit Denied">
+                
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+
+            <!-- ================= ERROR SCREEN: Ticket Not Found ================= -->
+            <div id="screen-ticket-not-found" class="hidden absolute inset-0 z-40 fade-in">
+                <img src="../../assets/images/uc04_Ticket_Not_Found.png" class="bg-img" alt="Ticket Not Found">
+                
+                <div class="hotspot dev" onclick="showScreen('screen-main')" style="
+                    top: 3.2%; left: 3%; width: 5.8%; height: 7.7%; z-index: 99;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            document.getElementById('screen-main').classList.add('hidden');
+            document.getElementById('screen-idle-enter').classList.add('hidden');
+            document.getElementById('screen-idle-exit').classList.add('hidden');
+            document.getElementById('screen-processing-start').classList.add('hidden');
+            document.getElementById('screen-processing-end').classList.add('hidden');
+            document.getElementById('screen-access-granted-enter').classList.add('hidden');
+            document.getElementById('screen-access-granted-exit').classList.add('hidden');
+            document.getElementById('screen-mem-slot').classList.add('hidden');
+            document.getElementById('screen-visitor-ticket').classList.add('hidden');
+            document.getElementById('screen-visitor-scan').classList.add('hidden');
+            document.getElementById('screen-bill').classList.add('hidden');
+            document.getElementById('screen-bill-completed').classList.add('hidden');
+            document.getElementById('screen-access-denied').classList.add('hidden');
+            document.getElementById('screen-exit-denied').classList.add('hidden');
+            document.getElementById('screen-ticket-not-found').classList.add('hidden');
+
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        // Funtion handle flow when click Scan Card
+        function handleScanCardEnter() {
+            showScreen('screen-processing-start');
+
+            setTimeout(() => {
+                showScreen('screen-processing-end');
+
+                setTimeout(() => {
+                    const isSuccess = Math.random() > 0.3; 
+
+                    if (isSuccess) {
+                        showScreen('screen-access-granted-enter'); 
+                        // ======== THÊM ĐOẠN NÀY ĐỂ PHÁT TÍN HIỆU ========
+                        // Kèm theo thời gian (Date.now) để chắc chắn mỗi lần quét là một tín hiệu mới
+                        localStorage.setItem('gate_event', 'vehicle_in_' + Date.now());
+                        // ===============================================
+                    } else {
+                        showScreen('screen-access-denied');
+                    }
+                }, 1000);
+
+            }, 1000);
+        }
+
+
+        function handleScanCardExit() {
+            showScreen('screen-processing-start');
+
+            setTimeout(() => {
+                showScreen('screen-processing-end');
+
+                setTimeout(() => {
+                    // Kiểm tra xem sinh viên đã thanh toán trên App chưa
+                    const isPaid = localStorage.getItem('student_paid_status') === 'true';
+
+                    if (isPaid) {
+                        showScreen('screen-access-granted-exit');
+                        // Mở cổng xong thì reset lại trạng thái, để lần sau đi gửi xe phải trả tiền tiếp
+                        localStorage.removeItem('student_paid_status');
+
+                        // ======== PHÁT TÍN HIỆU SINH VIÊN ĐÃ RA KHỎI BÃI ========
+                        localStorage.setItem('gate_event', 'vehicle_out_' + Date.now());
+                        // ========================================================
+                    } else {
+                        showScreen('screen-exit-denied');
+                        // Thêm dòng thông báo cho trực quan
+                        setTimeout(() => alert("⚠️ Kiosk: Truy cập bị từ chối. Vui lòng thanh toán trên App trước khi ra khỏi bãi!"), 100);
+                    }
+                }, 1000);
+            }, 1000);
+        }
+
+        function VisitorTicket() {
+            localStorage.setItem('gate_event', 'vehicle_in_' + Date.now());
+            showScreen('screen-visitor-ticket');
+        }
+
+        function DisplayMemSlot() {
+            showScreen('screen-mem-slot');
+        }
+        
+        function VisitorScan() {
+            showScreen('screen-visitor-scan');
+            
+        }
+
+        // Hàm xử lý khi Khách bấm vào vùng "Quét vé ra"
+        function VisitorScanExit() {
+            // Luôn cho thành công để demo mượt
+            showScreen('screen-bill'); // Hiện màn hình chuyển khoản (uc04_Bill.png)
+        }
+
+        // Hàm xử lý khi Khách đã chuyển khoản xong (bấm vào vùng Bill trên Kiosk)
+        function VisitorBill() {
+            showScreen('screen-bill-completed'); // Hiện màn hình "Thanh toán thành công"
+            
+            // ======== PHÁT TÍN HIỆU THANH TOÁN XONG ========
+            localStorage.setItem('visitor_event', 'payment_success_' + Date.now());
+            // ===============================================
+        }
+    </script>
+    
+</body>
+</html>

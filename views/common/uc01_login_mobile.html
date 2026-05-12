@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .phone-wrapper {
+            position: relative;
+            height: 100vh;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-area {
+            position: relative;
+            height: 100%;
+            aspect-ratio: 390 / 844;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Đổi background và xóa border để các nút tàng hình 100% */
+        .hotspot {
+            position: absolute;
+            background: transparent; /* Đổi màu đỏ thành trong suốt */
+            /* border: 1px solid yellow;  Xóa hoặc comment dòng viền vàng này lại */
+            cursor: pointer;
+            z-index: 50;
+        }
+
+        input.hotspot {
+            background: transparent;
+            border: none;
+            outline: none;
+        }
+
+        /* CSS thần thánh: Ẩn thanh cuộn nhưng vẫn cho phép vuốt/cuộn */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+        .custom-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="m-0 p-0 overflow-hidden">
+
+    <div class="phone-wrapper">
+        <div class="content-area">
+
+            <div id="step-1" class="absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/uc01_gateway.png" class="bg-img">
+                <div onclick="toStep2()" class="hotspot" style="top: 61.5%; left: 8%; width: 84%; height: 6.5%;"></div>
+                <div onclick="showVisitorPrompt()" class="hotspot" style="top: 71.5%; left: 8%; width: 84%; height: 6.5%;"></div>
+            </div>
+
+            <div id="visitor-popup" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-black/60 fade-in">
+                <div class="bg-white w-10/12 rounded-2xl p-5 shadow-2xl flex flex-col relative">
+                    <button onclick="hideVisitorPrompt()" class="absolute top-2 right-4 text-gray-400 hover:text-gray-600 font-bold text-2xl">&times;</button>
+                    
+                    <h3 class="text-center font-bold text-lg text-blue-600 mb-2">Lấy vé tạm</h3>
+                    <p class="text-xs text-gray-600 text-center mb-4">Vui lòng nhập mã vé được in trên Kiosk (VD: A123)</p>
+                    
+                    <input type="text" id="visitor-code-input" 
+                        class="border-2 border-gray-300 rounded-lg p-2 text-center text-lg font-bold uppercase focus:border-blue-500 focus:outline-none mb-4" 
+                        placeholder="Nhập mã...">
+                    
+                    <button onclick="submitVisitorCode()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition">Xác nhận</button>
+                </div>
+            </div>
+
+            <div id="custom-alert" class="hidden absolute inset-0 z-[60] flex items-center justify-center bg-black/60 fade-in">
+                <div class="bg-white w-10/12 rounded-2xl p-5 shadow-2xl flex flex-col relative text-center">
+                    <h3 class="font-bold text-lg text-blue-600 mb-2">Thông báo</h3>
+                    <p id="custom-alert-msg" class="text-sm text-gray-700 mb-5">Nội dung thông báo</p>
+                    
+                    <button onclick="hideCustomAlert()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition">OK</button>
+                </div>
+            </div>
+            
+            <div id="waiting" class="hidden absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/uc04_waiting.png" class="bg-img">
+            </div>
+
+            <div id="ticketrelease" class="hidden absolute inset-0 z-20 fade-in">
+                <img src="../../assets/images/uc04__ticketrelease.png" class="bg-img">
+            </div>
+
+            <div id="mobileticket" class="hidden absolute inset-0 z-30 fade-in">
+                <img src="../../assets/images/uc04_mobileticket.png" class="bg-img">
+                <div onclick="closeTicket()" class="hotspot" style="top: 5%; left: 6%; width: 4%; height: 2%;"></div>
+                
+                <div onclick="showMap('ticket')" class="hotspot" style="top: 84%; left: 10%; width: 80%; height: 6.5%;"></div>
+            </div>
+
+
+            <div id="mobilemap" class="hidden absolute inset-0 z-40 fade-in">
+                <img id="map-img" src="../../assets/images/uc06_MobileUI-Active.png" class="bg-img">
+                
+                <div onclick="hideMap()" class="hotspot" style="top: 4%; left: 4%; width: 12%; height: 6%;"></div>
+            </div>
+
+            <div id="step-2" class="hidden absolute inset-0 z-20 fade-in">
+                <img src="../../assets/images/uc01_login_normal.png" class="bg-img">
+                
+                <input type="text" id="mssv" class="hotspot px-2" 
+                    style="top: 25%; left: 13%; width: 74%; height: 3.5%;">
+                
+                <input type="password" id="pass" class="hotspot px-2" 
+                    style="top: 33%; left: 13%; width: 74%; height: 3.5%;">
+                
+                <div onclick="handleAuth()" class="hotspot" 
+                    style="top: 44%; left: 9.5%; width: 25%; height: 3.5%;"></div>
+                
+                <div onclick="document.getElementById('mssv').value='';document.getElementById('pass').value='';" 
+                    class="hotspot" style="top: 44%; left: 36%; width: 11.5%; height: 3.5%;"></div>
+                
+                <div onclick="goToStart()" class="hotspot" 
+                    style="top: 44%; left: 52%; width: 15%; height: 3.5%;"></div>
+            </div>
+
+            <div id="step-2-error" class="hidden absolute inset-0 z-30 fade-in">
+                <img src="../../assets/images/uc01_login_error.png" class="bg-img">
+                
+                <input type="text" id="mssv-retry" class="hotspot px-2" 
+                    style="top: 24.2%; left: 13%; width: 74%; height: 3.5%;">
+                
+                <input type="password" id="pass-retry" class="hotspot px-2" 
+                    style="top: 31.5%; left: 13%; width: 74%; height: 3.5%;">
+                
+                <div onclick="handleAuth(true)" class="hotspot" 
+                    style="top: 44.8%; left: 13%; width: 22%; height: 3.5%;"></div>
+                
+                <div onclick="goToStart()" class="hotspot" 
+                    style="top: 44.8%; left: 51%; width: 14%; height: 3.5%;"></div>
+            </div>
+
+            <div id="step-3" class="hidden absolute inset-0 z-40 fade-in overflow-y-auto custom-scrollbar">
+                <div class="relative w-full">
+                    <img id="dashboard-img" src="../../assets/images/uc02_dashboard.png" class="w-full h-auto block">
+
+                    <div id="balance-overlay" class="absolute flex flex-col justify-center text-white" 
+                         style="top: 14%; left: 12%; width: 45%; height: 8.5%; background-color: #02368c;">
+                        <div style="font-size: 10px; font-weight: 600; letter-spacing: 1px; color: #a0c4ff;">BKPAY BALANCE</div>
+                        <div id="balance-amount" style="font-size: 26px; font-weight: bold; line-height: 1.2;">0 VND</div>
+                    </div>
+
+                    <div onclick="testZeroBalance()" class="hotspot" style="top: 19%; left: 9.5%; width: 40%; height: 3%;"></div>
+                    
+                    <div id="btn-topup" onclick="window.location.href='../learner/uc07_mobile_payment.html'" 
+                         class="hotspot" style="top: 23%; left: 14%; width: 34%; height: 3.5%;"></div>
+
+                    <div id="btn-map" onclick="showMap('dashboard')" 
+                         class="hotspot" style="top: 92.5%; left: 35%; width: 14%; height: 5%;"></div>
+                    
+                    <div id="btn-logout" onclick="goToStart()" 
+                         class="hotspot" style="top: 92.5%; left: 78%; width: 14%; height: 5%;"></div>
+                </div>
+            </div>
+
+        </div> 
+    </div> 
+    
+    <script>
+        // Thêm cờ để biết ai đang dùng app
+        let isLearner = false;
+        let hasActiveTicket = false; // <--- THÊM DÒNG NÀY
+
+        function toStep2() {
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.remove('hidden');
+        }
+
+
+        // ======= XỬ LÝ POPUP NHẬP MÃ VÉ KHÁCH =======
+        function showVisitorPrompt() {
+            document.getElementById('visitor-popup').classList.remove('hidden');
+            document.getElementById('visitor-code-input').value = ''; // Reset trắng ô nhập
+        }
+
+        function hideVisitorPrompt() {
+            document.getElementById('visitor-popup').classList.add('hidden');
+        }
+
+        function submitVisitorCode() {
+            const code = document.getElementById('visitor-code-input').value.trim();
+            
+            if (code === '') {
+                // Nếu chưa nhập gì mà bấm Xác nhận thì lắc nhẹ hoặc cảnh báo (dùng alert tạm cho nhanh)
+                showCustomAlert("Vui lòng nhập mã vé!"); 
+                return;
+            }
+
+            // Đóng popup
+            hideVisitorPrompt();
+
+            // Chạy luồng chờ cấp vé ảo như cũ
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('waiting').classList.remove('hidden');
+
+            setTimeout(() => {
+                document.getElementById('waiting').classList.add('hidden');
+                document.getElementById('ticketrelease').classList.remove('hidden');
+
+                setTimeout(() => {
+                    document.getElementById('ticketrelease').classList.add('hidden');
+                    document.getElementById('mobileticket').classList.remove('hidden');
+                }, 1000);
+            }, 1000);
+        }
+
+        // Đăng xuất và về trang chủ
+        function goToStart() {
+            isLearner = false; // Reset cờ
+            hasActiveTicket = false; // <--- THÊM DÒNG NÀY ĐỂ HỦY VÉ
+            window.parent.postMessage("switch-to-mobile", "*");
+
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-2-error').classList.add('hidden');
+            document.getElementById('step-3').classList.add('hidden');
+            document.getElementById('waiting').classList.add('hidden');
+            document.getElementById('ticketrelease').classList.add('hidden');
+            document.getElementById('mobileticket').classList.add('hidden');
+            if (document.getElementById('mobilemap')) {
+                document.getElementById('mobilemap').classList.add('hidden');
+            }
+
+            document.getElementById('step-1').classList.remove('hidden');
+        }
+
+
+        function handleAuth(isRetry = false) {
+            const u = isRetry ? document.getElementById('mssv-retry').value : document.getElementById('mssv').value;
+            const p = isRetry ? document.getElementById('pass-retry').value : document.getElementById('pass').value;
+
+            if (u === "2011234" && p === "123") {
+                isLearner = true; 
+                
+                // === THÊM DÒNG NÀY ĐỂ ẨN MÀN HÌNH GATEWAY ===
+                document.getElementById('step-1').classList.add('hidden'); 
+                
+                document.getElementById('step-2').classList.add('hidden');
+                document.getElementById('step-2-error').classList.add('hidden');
+                document.getElementById('step-3').classList.remove('hidden');
+
+                // === GỌI HÀM CẬP NHẬT SỐ DƯ ===
+                updateBalanceDisplay();
+                
+                document.getElementById('dashboard-img').src = "../../assets/images/uc02_dashboard.png";
+                document.getElementById('btn-topup').style.display = "block";
+                document.getElementById('btn-logout').style.display = "block";
+
+            } else if (u === "admin" && p === "admin") {
+                window.parent.postMessage("switch-to-macbook", "*");
+                window.location.href = '../admin/dashboard.html';
+                
+            } else {
+                document.getElementById('step-1').classList.add('hidden'); // Ẩn luôn cho chắc
+                document.getElementById('step-2').classList.add('hidden');
+                document.getElementById('step-2-error').classList.remove('hidden');
+                document.getElementById('mssv-retry').value = u;
+                document.getElementById('pass-retry').value = p;
+            }
+        }
+
+
+        // Biến để nhớ xem user mở bản đồ từ đâu
+        let mapSource = ''; 
+
+        function showMap(source) {
+            mapSource = source; 
+            
+            // KIỂM TRA TRẠNG THÁI VÉ ĐỂ TRÁO ẢNH BẢN ĐỒ
+            const mapImg = document.getElementById('map-img');
+            if (hasActiveTicket) {
+                mapImg.src = "../../assets/images/uc06_MobileUI-Active.png"; // Có vé
+            } else {
+                mapImg.src = "../../assets/images/uc06_nomarl_mobileapp_noticket.png"; // Map trơn
+            }
+            
+            if (source === 'ticket') {
+                document.getElementById('mobileticket').classList.add('hidden');
+            } else if (source === 'dashboard') {
+                document.getElementById('step-3').classList.add('hidden');
+            }
+            
+            document.getElementById('mobilemap').classList.remove('hidden');
+        }
+
+        function hideMap() {
+            // Ẩn bản đồ
+            document.getElementById('mobilemap').classList.add('hidden');
+            
+            // Trả về đúng màn hình trước đó
+            if (mapSource === 'ticket') {
+                document.getElementById('mobileticket').classList.remove('hidden');
+            } else if (mapSource === 'dashboard') {
+                document.getElementById('step-3').classList.remove('hidden');
+            }
+        }
+
+        // HÀM MỚI: Đóng vé nhưng KHÔNG đăng xuất
+        function closeTicket() {
+            document.getElementById('mobileticket').classList.add('hidden');
+            if (document.getElementById('mobilemap')) {
+                document.getElementById('mobilemap').classList.add('hidden');
+            }
+
+            if (isLearner) {
+                // Nếu là Sinh viên -> Trả về Dashboard để còn bấm Top Up
+                document.getElementById('step-3').classList.remove('hidden');
+            } else {
+                // Nếu là Khách -> Về màn hình Gateway gốc
+                document.getElementById('step-1').classList.remove('hidden');
+            }
+        }
+
+        // ======= XỬ LÝ POPUP THÔNG BÁO CHUNG (CUSTOM ALERT) =======
+        let alertCallback = null; // Biến nhớ lệnh cần làm sau khi bấm OK
+
+        function showCustomAlert(msg, callback = null) {
+            document.getElementById('custom-alert-msg').innerText = msg;
+            document.getElementById('custom-alert').classList.remove('hidden');
+            alertCallback = callback; // Lưu lại lệnh cần làm (nếu có)
+        }
+
+        function hideCustomAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+            // Nếu có lệnh chờ sẵn thì chạy lệnh đó sau khi đóng popup
+            if (alertCallback) {
+                alertCallback();
+                alertCallback = null; // Reset lại
+            }
+        }
+
+        // ======== TAI NGHE: LẮNG NGHE SỰ KIỆN TỪ KIOSK ========
+        window.addEventListener('storage', function(e) {
+            
+            // 1. LUỒNG KHÁCH: THANH TOÁN XONG
+            if (e.key === 'visitor_event' && e.newValue.includes('payment_success')) {
+                // Nhét goToStart() vào callback để chờ người dùng bấm OK
+                showCustomAlert("🔔 Hệ thống: Thanh toán thành công! Vé điện tử của bạn đã được đóng. Chào tạm biệt!", () => {
+                    goToStart(); 
+                });
+                return; 
+            }
+
+            // 2. LUỒNG SINH VIÊN: VÀO CỔNG 
+            if (e.key === 'gate_event' && e.newValue.includes('vehicle_in')) {
+                hasActiveTicket = true; // <--- THÊM DÒNG NÀY ĐỂ BÁO LÀ ĐÃ CÓ VÉ
+
+                const step3 = document.getElementById('step-3');
+                const isDashboard = !step3.classList.contains('hidden');
+                
+                if (isDashboard) {
+                    step3.classList.add('hidden');
+                    document.getElementById('waiting').classList.remove('hidden');
+
+                    setTimeout(() => {
+                        document.getElementById('waiting').classList.add('hidden');
+                        document.getElementById('ticketrelease').classList.remove('hidden');
+
+                        setTimeout(() => {
+                            document.getElementById('ticketrelease').classList.add('hidden');
+                            document.getElementById('mobileticket').classList.remove('hidden');
+                        }, 1000);
+                    }, 1000);
+                }
+            }
+            // 3. LUỒNG SINH VIÊN: RA CỔNG THÀNH CÔNG (Thu hồi vé)
+            if (e.key === 'gate_event' && e.newValue.includes('vehicle_out')) {
+                hasActiveTicket = false; // Hủy vé trong app
+                showCustomAlert("🚗 Hệ thống: Bạn đã ra khỏi bãi xe thành công. Hẹn gặp lại!");
+            }
+        });
+
+        // Cập nhật hiển thị số dư ra màn hình
+        function updateBalanceDisplay() {
+            let bal = localStorage.getItem('bkpay_balance');
+            if (bal === null) {
+                bal = 50000; // Cấp vốn ban đầu cho sinh viên là 50k
+                localStorage.setItem('bkpay_balance', bal);
+            }
+            // === SỬA DÒNG NÀY (Thay balance-overlay bằng balance-amount) ===
+            document.getElementById('balance-amount').innerText = parseInt(bal).toLocaleString('vi-VN') + ' VND';
+        }
+
+        // Hàm bí mật để Toggle số dư (Dùng để test demo nhiều kịch bản)
+        function testZeroBalance() {
+            let currentBalance = parseInt(localStorage.getItem('bkpay_balance') || '0');
+            
+            // Nếu tiền đang bằng 0 -> Nạp lại 10.000đ
+            if (currentBalance === 0) {
+                localStorage.setItem('bkpay_balance', '10000');
+                updateBalanceDisplay();
+                showCustomAlert("🛠️ Dev Mode: Đã bơm lại 10.000đ vào tài khoản để test.");
+            } 
+            // Nếu tiền đang lớn hơn 0 -> Trừ sạch về 0đ
+            else {
+                localStorage.setItem('bkpay_balance', '0');
+                updateBalanceDisplay();
+                showCustomAlert("🛠️ Dev Mode: Đã chỉnh số dư về 0đ để test chức năng Ghi nợ.");
+            }
+        }
+
+        // ======== TỰ ĐỘNG ĐĂNG NHẬP LẠI KHI TỪ TRANG THANH TOÁN QUAY VỀ ========
+        window.addEventListener('DOMContentLoaded', (event) => {
+            // Đọc thanh địa chỉ URL xem có chữ return=true không
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('return') === 'true') {
+                
+                // Tự động điền MSSV và Pass vào rồi gọi hàm Đăng nhập
+                document.getElementById('mssv').value = '2011234';
+                document.getElementById('pass').value = '123';
+                handleAuth();
+                
+                // Kiểm tra xem thanh toán Thành công hay Hủy để báo cho sinh viên
+                if (urlParams.get('success') === 'true') {
+                    localStorage.setItem('student_paid_status', 'true');
+                    setTimeout(() => showCustomAlert("🔔 App Sinh viên: Thanh toán thành công! Bạn có thể quét thẻ ra cổng."), 300);
+                } else {
+                    setTimeout(() => showCustomAlert("⚠️ App Sinh viên: Giao dịch thất bại hoặc đã bị hủy!"), 300);
+                }
+                // === THÊM DÒNG NÀY ĐỂ DỌN DẸP URL ===
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+    </script>
+</body>
+</html>

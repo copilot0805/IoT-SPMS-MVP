@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .wrapper {
+            position: relative;
+            height: 100vh;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-area {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            aspect-ratio: 690 / 844;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Hotspot để soi vị trí - Chỉnh 0.3 thành 0 khi xong */
+        .hotspot {
+            position: absolute;
+            background: rgba(255, 0, 0, 0);
+            border: 1px solid yellow;
+            cursor: pointer;
+            z-index: 50;
+        }
+
+        input.hotspot {
+            background: transparent;
+            border: none;
+        }
+    </style>
+</head>
+
+<body class="m-0 p-0 overflow-hidden">
+
+    <div class="wrapper">
+        <div class="content-area">
+
+            <div id="no-user" class="absolute inset-0 z-10 fade-in">
+                <img src="../../assets/images/uc06_Signage_No-User.png" class="bg-img">
+                <div onclick="scanCard()" class="hotspot inset-0"></div>
+            </div>
+
+            <div id="user-active" class="hidden absolute inset-0 z-20 fade-in">
+                  <img src="../../assets/images/uc06_Signage_Active.png" class="bg-img">
+                <div onclick="backToIdle()" class="hotspot inset-0">
+                </div>
+            </div>
+
+            <div id="maintenance" class="hidden absolute inset-0 z-30 fade-in">
+                <img src="../../assets/images/uc06_Signage_Maintenance.png" class="bg-img">
+                <div onclick="backToIdle()" class="hotspot inset-0">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hàm reset về màn hình chờ (No-User)
+        function backToIdle() {
+            document.getElementById('user-active').classList.add('hidden');
+            document.getElementById('maintenance').classList.add('hidden');
+            document.getElementById('no-user').classList.remove('hidden');
+        }
+
+        // Hàm ép buộc hiện bảng LED màu xanh (Bản đồ)
+        function showActiveScreen() {
+            document.getElementById('no-user').classList.add('hidden');
+            document.getElementById('maintenance').classList.add('hidden');
+            document.getElementById('user-active').classList.remove('hidden');
+        }
+
+        // Xử lý khi click thủ công vào bảng LED (Dành cho việc tự test trực tiếp trên tab LED)
+        function scanCard() {
+            showActiveScreen();
+            setTimeout(backToIdle, 5000);
+        }
+
+        // ======== LẮNG NGHE TÍN HIỆU TỪ KIOSK CỔNG VÀO ========
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'gate_event' && e.newValue.includes('vehicle_in')) {
+                // Khi Kiosk báo có xe vào, 100% hiện màn hình xanh chỉ dẫn
+                showActiveScreen();
+                
+                // Tự động tắt LED, quay về màn hình chờ sau 5 giây
+                setTimeout(backToIdle, 5000);
+            }
+        });
+    </script>
+    
+</body>
+</html>

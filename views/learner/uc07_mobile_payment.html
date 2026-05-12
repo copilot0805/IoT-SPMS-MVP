@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .active {
+            display: block;
+            opacity: 1;
+        }
+
+        .content-area {
+    position: relative;
+    height: 100vh;
+    aspect-ratio: 390 / 844;
+
+    overflow: hidden;
+    background: #fff;
+
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+        .hotspot {
+            position: absolute;
+            cursor: pointer;
+            z-index: 50;
+            /* border: 2px solid red;
+    background: rgba(255,0,0,0.25); */
+        }
+
+        .fade-in {
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
+
+<div class="content-area" id="app">
+
+    <!-- POPUP GHI NỢ -->
+    <div id="custom-confirm"
+         class="hidden absolute inset-0 z-[60] flex items-center justify-center bg-black/60 fade-in">
+
+        <div class="bg-white w-10/12 rounded-2xl p-5 shadow-2xl text-center">
+
+            <h3 class="font-bold text-lg text-blue-600 mb-2">
+                Số dư không đủ
+            </h3>
+
+            <p id="custom-confirm-msg"
+               class="text-sm text-gray-700 mb-5">
+                Số dư BKPay không đủ.
+            </p>
+
+            <div class="flex gap-3">
+
+                <button onclick="rejectDebt()"
+                        class="w-1/2 bg-gray-300 text-gray-800 font-bold py-3 rounded-xl">
+                    Hủy
+                </button>
+
+                <button onclick="acceptDebt()"
+                        class="w-1/2 bg-blue-600 text-white font-bold py-3 rounded-xl">
+                    Đồng ý
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================= -->
+    <!-- MÀN HÌNH CHECK PHÍ -->
+    <!-- ================================================= -->
+
+    <div id="f1_check" class="screen active">
+
+        <img src="../../assets/images/uc07_check_fee_fl1.png"
+             class="w-full h-full object-cover">
+
+        <!-- Nút thanh toán -->
+        <div onclick="processPayment()"
+             class="hotspot"
+             style="top: 51%; left: 8%; width: 85%; height: 6.5%;">
+        </div>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- LOADING -->
+    <!-- ================================================= -->
+
+    <div id="f1_load" class="screen">
+
+        <img src="../../assets/images/uc07_loading_fee_fl1.png"
+             class="w-full h-full object-cover">
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- BKPAY FLOW -->
+    <!-- ================================================= -->
+
+    <div id="f4_bkpay" class="screen">
+
+        <img src="../../assets/images/uc07_bkpay_fl4.png"
+             class="w-full h-full object-cover">
+
+        <!-- Nút THANH TOÁN THÀNH CÔNG -->
+        <div onclick="paySuccess()"
+             class="hotspot"
+             style="top: 75%; left: 52%; width: 34%; height: 5%;;">
+        </div>
+
+        <!-- Nút THANH TOÁN THẤT BẠI -->
+        <div onclick="show('f4_fail')"
+             class="hotspot"
+             style="top: 75%; left: 12%; width: 36%; height: 5%;;">
+        </div>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- SUCCESS FLOW -->
+    <!-- ================================================= -->
+
+    <div id="f4_success" class="screen">
+
+        <img src="../../assets/images/uc07_successful_fl4.png"
+             class="w-full h-full object-cover">
+
+        <!-- Về dashboard -->
+        <div onclick="goToDashboard(true)"
+             class="hotspot"
+             style="top: 81%; left: 5%; width: 91%; height: 6.5%;">
+        </div>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- FAIL FLOW -->
+    <!-- ================================================= -->
+
+    <div id="f4_fail" class="screen">
+
+        <img src="../../assets/images/uc07_fail_fl4.png"
+             class="w-full h-full object-cover">
+
+        <!-- Thử lại -->
+        <div onclick="show('f4_bkpay')"
+             class="hotspot"
+             style="top: 67%; left: 6%; width: 88.5%; height: 6%;;">
+        </div>
+
+        <!-- Về màn hình chính -->
+        <div onclick="goToDashboard(false)"
+             class="hotspot"
+             style="top: 2%; left: 1%; width: 20%; height: 8%;">
+        </div>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- FLOW 2 : THANH TOÁN THẤT BẠI -->
+    <!-- ================================================= -->
+
+    <div id="f2_load" class="screen">
+
+        <img src="../../assets/images/uc07_loading_fee_fl1.png"
+             class="w-full h-full object-cover">
+
+    </div>
+
+    <div id="f2_fail" class="screen">
+
+        <img src="../../assets/images/uc07_fail_fee_fl2.png"
+             class="w-full h-full object-cover">
+
+        <!-- Thử lại -->
+        <div onclick="show('f1_check')"
+             class="hotspot"
+             style="top: 65%; left: 8%; width: 85%; height: 6.5%;">
+        </div>
+
+        <!-- Về dashboard -->
+        <div onclick="goToDashboard(false)"
+             class="hotspot"
+             style="top: 7%; left: 5%; width: 12%; height: 6%;">
+        </div>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- FLOW 3 : GHI NỢ -->
+    <!-- ================================================= -->
+
+    <div id="f3_load" class="screen">
+
+        <img src="../../assets/images/uc07_loading_fee_fl1.png"
+             class="w-full h-full object-cover">
+
+    </div>
+
+    <div id="f3_dept" class="screen">
+
+        <img src="../../assets/images/uc07_loading_dept_fl3.png"
+             class="w-full h-full object-cover">
+
+        <!-- Kết nối BKPay -->
+        <div onclick="autoLoad('f3_connect', 'f3_success')"
+             class="hotspot"
+             style="top: 70%; left: 8%; width: 85%; height: 6.5%;">
+        </div>
+
+    </div>
+
+    <div id="f3_connect" class="screen">
+
+        <img src="../../assets/images/uc07_connect_bkpay_fl3.png"
+             class="w-full h-full object-cover">
+
+    </div>
+
+    <div id="f3_success" class="screen">
+
+        <img src="../../assets/images/uc07_successful_fl3.png"
+             class="w-full h-full object-cover">
+
+        <!-- Về dashboard -->
+        <div onclick="goToDashboard(true)"
+             class="hotspot"
+             style="top: 81%; left: 5%; width: 91%; height: 6.5%;">
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    // =====================================================
+    // HIỂN THỊ SCREEN
+    // =====================================================
+
+    function show(id) {
+
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+
+        document.getElementById(id).classList.add('active');
+    }
+
+    // =====================================================
+    // AUTO LOAD
+    // =====================================================
+
+    function autoLoad(loadId, nextId) {
+
+        show(loadId);
+
+        setTimeout(() => {
+            show(nextId);
+        }, 1500);
+    }
+
+    // =====================================================
+    // THANH TOÁN
+    // =====================================================
+
+    function processPayment() {
+
+        let balance =
+            parseInt(localStorage.getItem('bkpay_balance') || '0');
+
+        let fee = 2000;
+
+        // =================================================
+        // ĐỦ TIỀN
+        // =================================================
+
+        if (balance >= fee) {
+
+            show('f1_load');
+
+            setTimeout(() => {
+
+                show('f4_bkpay');
+
+            }, 1500);
+
+        }
+
+        // =================================================
+        // KHÔNG ĐỦ TIỀN
+        // =================================================
+
+        else {
+
+            document.getElementById('custom-confirm-msg').innerText =
+                "Số dư BKPay không đủ (Còn " +
+                balance.toLocaleString('vi-VN') +
+                "đ). Bạn có muốn dùng tính năng Ghi nợ của ĐHBK không?";
+
+            document.getElementById('custom-confirm')
+                .classList.remove('hidden');
+        }
+    }
+
+    // =====================================================
+    // THANH TOÁN THÀNH CÔNG
+    // =====================================================
+
+    function paySuccess() {
+
+        let balance =
+            parseInt(localStorage.getItem('bkpay_balance') || '0');
+
+        let fee = 2000;
+
+        balance -= fee;
+
+        localStorage.setItem('bkpay_balance', balance);
+
+        show('f4_success');
+    }
+
+    // =====================================================
+    // ĐỒNG Ý GHI NỢ
+    // =====================================================
+
+    function acceptDebt() {
+
+        document.getElementById('custom-confirm')
+            .classList.add('hidden');
+
+        autoLoad('f3_load', 'f3_dept');
+    }
+
+    // =====================================================
+    // HỦY GHI NỢ
+    // =====================================================
+
+    function rejectDebt() {
+
+        document.getElementById('custom-confirm')
+            .classList.add('hidden');
+
+        autoLoad('f2_load', 'f2_fail');
+    }
+
+    // =====================================================
+    // QUAY VỀ DASHBOARD
+    // =====================================================
+
+    function goToDashboard(isSuccess) {
+
+        if (isSuccess) {
+
+            localStorage.setItem(
+                'student_payment',
+                'success_' + Date.now()
+            );
+        }
+
+        window.location.href =
+            '../common/uc01_login_mobile.html?return=true&success='
+            + isSuccess;
+    }
+
+</script>
+
+</body>
+</html>
