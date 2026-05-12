@@ -260,6 +260,7 @@
             }, 1000);
         }
 
+
         function handleScanCardExit() {
             showScreen('screen-processing-start');
 
@@ -267,15 +268,23 @@
                 showScreen('screen-processing-end');
 
                 setTimeout(() => {
-                    const isSuccess = Math.random() > 0.3; 
+                    // Kiểm tra xem sinh viên đã thanh toán trên App chưa
+                    const isPaid = localStorage.getItem('student_paid_status') === 'true';
 
-                    if (isSuccess) {
+                    if (isPaid) {
                         showScreen('screen-access-granted-exit');
+                        // Mở cổng xong thì reset lại trạng thái, để lần sau đi gửi xe phải trả tiền tiếp
+                        localStorage.removeItem('student_paid_status');
+
+                        // ======== PHÁT TÍN HIỆU SINH VIÊN ĐÃ RA KHỎI BÃI ========
+                        localStorage.setItem('gate_event', 'vehicle_out_' + Date.now());
+                        // ========================================================
                     } else {
                         showScreen('screen-exit-denied');
+                        // Thêm dòng thông báo cho trực quan
+                        setTimeout(() => alert("⚠️ Kiosk: Truy cập bị từ chối. Vui lòng thanh toán trên App trước khi ra khỏi bãi!"), 100);
                     }
                 }, 1000);
-
             }, 1000);
         }
 
@@ -292,19 +301,6 @@
             showScreen('screen-visitor-scan');
             
         }
-
-        // function VisitorScanExit() {
-        //     const isSuccess = Math.random() > 0.3;
-        //     if (isSuccess) {
-        //                 showScreen('screen-bill');
-        //             } else {
-        //                 showScreen('screen-ticket-not-found');
-        //             }
-        // }
-
-        // function VisitorBill() {
-        //     showScreen('screen-bill-completed');
-        // }
 
         // Hàm xử lý khi Khách bấm vào vùng "Quét vé ra"
         function VisitorScanExit() {

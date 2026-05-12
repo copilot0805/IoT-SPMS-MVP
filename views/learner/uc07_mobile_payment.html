@@ -24,16 +24,31 @@
 <body class="bg-gray-900 flex items-center justify-center min-h-screen">
 
     <div class="content-area" id="app">
+        <div id="custom-confirm" class="hidden absolute inset-0 z-[60] flex items-center justify-center bg-black/60 fade-in">
+            <div class="bg-white w-10/12 rounded-2xl p-5 shadow-2xl flex flex-col relative text-center">
+                <h3 class="font-bold text-lg text-blue-600 mb-2">Số dư không đủ</h3>
+                <p id="custom-confirm-msg" class="text-sm text-gray-700 mb-5">Số dư BKPay không đủ. Bạn có muốn dùng tính năng Ghi nợ của ĐHBK không?</p>
+                
+                <div class="flex gap-3">
+                    <button onclick="rejectDebt()" class="w-1/2 bg-gray-300 text-gray-800 font-bold py-3 rounded-xl hover:bg-gray-400 transition">Hủy</button>
+                    <button onclick="acceptDebt()" class="w-1/2 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition">Đồng ý</button>
+                </div>
+            </div>
+        </div>
         <!-- Menu tàng hình nằm trên nền ảnh uc7_loading_time_1 -->
-        <div id="menu" class="screen active p-6 flex flex-col justify-center gap-4">
+        <!-- <div id="menu" class="screen active p-6 flex flex-col justify-center gap-4">
             <div onclick="show('f1_check')" class="invisible-btn"></div>
             <div onclick="show('f2_check')" class="invisible-btn"></div>
             <div onclick="show('f3_check')" class="invisible-btn"></div>
-        </div>
+        </div> -->
 
         <!-- Các màn hình chức năng -->
-        <div id="f1_check" class="screen"><img src="../../assets/images/uc07_check_fee_fl1.png" class="w-full h-full object-cover">
+        <!-- <div id="f1_check" class="screen"><img src="../../assets/images/uc07_check_fee_fl1.png" class="w-full h-full object-cover">
             <div onclick="autoLoad('f1_load', 'f1_free')" class="hotspot" style="top: 51%; left: 8%; width: 85%; height: 6.5%;"></div>
+        </div> -->
+        <div id="f1_check" class="screen active">
+            <img src="../../assets/images/uc07_check_fee_fl1.png" class="w-full h-full object-cover">
+            <div onclick="processPayment()" class="hotspot" style="top: 51%; left: 8%; width: 85%; height: 6.5%;"></div>
         </div>
         <div id="f1_load" class="screen"><img src="../../assets/images/uc07_loading_fee_fl1.png" class="w-full h-full object-cover"></div>
         <div id="f1_free" class="screen"><img src="../../assets/images/uc07_free_fl1.png" class="w-full h-full object-cover">
@@ -70,7 +85,7 @@
 
         function autoLoad(loadId, nextId) {
             show(loadId);
-            setTimeout(() => { show(nextId); }, 1000);
+            setTimeout(() => { show(nextId); }, 1500);
         }
 
         function goToDashboard(isSuccess) {
@@ -78,6 +93,35 @@
                 localStorage.setItem('student_payment', 'success_' + Date.now());
             }
             window.location.href = '../common/uc01_login_mobile.html?return=true&success=' + isSuccess;
+        }
+
+        // LUỒNG THANH TOÁN THÔNG MINH (DÙNG POPUP CUSTOM)
+        function processPayment() {
+            let balance = parseInt(localStorage.getItem('bkpay_balance') || '0');
+            let fee = 2000; // Giả sử phí gửi xe là 2.000đ
+
+            if (balance >= fee) {
+                // Đủ tiền -> Trừ tiền -> Chạy Flow 1 (Thành công)
+                balance -= fee;
+                localStorage.setItem('bkpay_balance', balance);
+                autoLoad('f1_load', 'f1_free');
+            } else {
+                // Không đủ tiền -> Bật cái bảng Custom Confirm lên
+                document.getElementById('custom-confirm-msg').innerText = "Số dư BKPay không đủ (Còn " + balance.toLocaleString('vi-VN') + "đ). Bạn có muốn dùng tính năng Ghi nợ của ĐHBK không?";
+                document.getElementById('custom-confirm').classList.remove('hidden');
+            }
+        }
+
+        // Nếu bấm "Đồng ý" ghi nợ
+        function acceptDebt() {
+            document.getElementById('custom-confirm').classList.add('hidden'); // Ẩn popup
+            autoLoad('f3_load', 'f3_dept'); // Chạy Flow 3 (Ghi nợ)
+        }
+
+        // Nếu bấm "Hủy" ghi nợ
+        function rejectDebt() {
+            document.getElementById('custom-confirm').classList.add('hidden'); // Ẩn popup
+            autoLoad('f2_load', 'f2_fail'); // Chạy Flow 2 (Thất bại)
         }
     </script>
 </body>

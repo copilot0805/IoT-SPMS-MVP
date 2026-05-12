@@ -84,37 +84,37 @@
     </div>
 
     <script>
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-
-        function scanCard() {
-            document.getElementById('no-user').classList.add('hidden');
-            const value = getRandomInt(1, 100);
-            //There's 30% chance that the server is broken
-            if (value < 70) {
-                document.getElementById('user-active').classList.remove('hidden');
-            }
-            else {
-                document.getElementById('maintenance').classList.remove('hidden');
-            }
-        }
-
+        // Hàm reset về màn hình chờ (No-User)
         function backToIdle() {
             document.getElementById('user-active').classList.add('hidden');
             document.getElementById('maintenance').classList.add('hidden');
             document.getElementById('no-user').classList.remove('hidden');
         }
 
-        // ======== THÊM ĐOẠN NÀY ĐỂ BẢNG LED NHẬN TÍN HIỆU ========
+        // Hàm ép buộc hiện bảng LED màu xanh (Bản đồ)
+        function showActiveScreen() {
+            document.getElementById('no-user').classList.add('hidden');
+            document.getElementById('maintenance').classList.add('hidden');
+            document.getElementById('user-active').classList.remove('hidden');
+        }
+
+        // Xử lý khi click thủ công vào bảng LED (Dành cho việc tự test trực tiếp trên tab LED)
+        function scanCard() {
+            showActiveScreen();
+            setTimeout(backToIdle, 5000);
+        }
+
+        // ======== LẮNG NGHE TÍN HIỆU TỪ KIOSK CỔNG VÀO ========
         window.addEventListener('storage', function(e) {
             if (e.key === 'gate_event' && e.newValue.includes('vehicle_in')) {
-                scanCard();
+                // Khi Kiosk báo có xe vào, 100% hiện màn hình xanh chỉ dẫn
+                showActiveScreen();
                 
                 // Tự động tắt LED, quay về màn hình chờ sau 5 giây
                 setTimeout(backToIdle, 5000);
             }
         });
     </script>
+    
 </body>
 </html>
