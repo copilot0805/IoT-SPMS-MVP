@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .wrapper {
+            position: relative;
+            height: 100vh;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-area {
+            position: relative;
+            height: 90vh; /* Set a height for desktop view */
+            aspect-ratio: 390 / 844;
+            background: #000;
+            overflow: hidden;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Make the iframe fill the container exactly */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+
+<body class="m-0 p-0 overflow-hidden">
+    <div class="wrapper">
+        <div class="content-area">
+            <iframe 
+                src="https://embed.figma.com/proto/EqTiMLjbl0sKa76fC5Rwck/IoT-SPMS_Mockup_Final?node-id=119-357&viewport=540%2C418%2C0.42&scaling=scale-down-fit&content-scaling=fixed&starting-point-node-id=119%3A357&page-id=69%3A25&embed-host=share&hide-ui=1&hotspot-hints=0" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+</body>
+</html>

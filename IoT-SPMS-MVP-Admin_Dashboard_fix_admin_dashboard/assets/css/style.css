@@ -1,0 +1,162 @@
+
+/* Electronic Signage (No user) */
+.electronic-signage {
+    position: relative;
+    width: 690px;
+    height: 914px;
+    background: #FFFFFF;
+}
+
+/* Groups */
+.group-5, .group-4, .group-3, .group-1 {
+    position: absolute;
+    width: 656px;
+    height: 486px;
+    left: 17px;
+    top: 19px;
+}
+
+.group-main {
+    position: absolute;
+    width: 655px;
+    height: 486px;
+    left: 17px;
+    top: 19px;
+}
+
+/* Parking Area */
+.parking-area {
+    position: absolute;
+    width: 655px;
+    height: 466.64px;
+    left: 17px;
+    top: 30.15px;
+}
+
+/* Lines */
+.line {
+    position: absolute;
+    border: 1px solid #677191; /* Gray */
+}
+
+.line-vertical-90 {
+    transform: rotate(90deg);
+}
+
+/* Labels */
+.entrance-label {
+    position: absolute;
+    width: 44px;
+    height: 17.43px;
+    left: 323px;
+    top: 19px;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    color: #677191;
+}
+
+.exit-label {
+    position: absolute;
+    width: 34px;
+    height: 17.43px;
+    left: 330px;
+    top: 487.57px;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    color: #677191;
+}
+
+/* Slots */
+.slot-selected {
+    position: absolute;
+    width: 71px;
+    height: 35.68px;
+    /* Specific coordinates from file applied to instances */
+}
+
+.slot-available {
+    position: absolute;
+    width: 71px;
+    height: 35.68px;
+    /* Specific coordinates from file applied to instances */
+}
+
+.slot-vector-selected {
+    box-sizing: border-box;
+    position: absolute;
+    visibility: hidden;
+    background: #567DF4;
+    border: 1px solid #567DF4;
+    transform: matrix(0, -1, -1, 0, 0, 0);
+}
+
+.slot-vector-available {
+    box-sizing: border-box;
+    position: absolute;
+    background: #F3F6FF;
+    border: 1px solid #567DF4;
+    transform: matrix(0, -1, -1, 0, 0, 0);
+}
+
+/* Slot Labels (A01, A08, etc.) */
+.slot-id-label {
+    position: absolute;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.label-white { color: #FFFFFF; }
+.label-black { color: #192342; }
+
+/* Bike Assets */
+.bike-container {
+    position: absolute;
+    width: 100px;
+    height: 66.66px;
+}
+
+.bike-body {
+    position: absolute;
+    width: 79.21px;
+    height: 48.1px;
+    background: #EA8F5E; /* orange */
+}
+
+.bike-union-yellow {
+    background: #F5D069;
+}
+
+.bike-subtract-gray {
+    background: #D9D9D9;
+
+.hotspot {
+    position: absolute;
+    cursor: pointer;
+    background: transparent;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.hotspot.dev {
+    outline: 2px dashed rgba(255, 0, 0, 0.6);
+    cursor: pointer;
+    background: transparent;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .screen { position: absolute; inset: 0; display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .active { display: block; opacity: 1; }
+        
+        .content-area { 
+            width: 390px; height: 844px; margin: auto; position: relative; overflow: hidden; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            /* Thêm ảnh nền vào đây */
+            background-image: url('../../assets/images/uc7_loading_time_1.png');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hotspot { position: absolute; cursor: pointer; z-index: 50; }
+        /* Lớp phủ tàng hình cho menu */
+        .invisible-btn { opacity: 0; cursor: pointer; width: 100%; height: 60px; }
+    </style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
+
+    <div class="content-area" id="app">
+        <!-- Menu tàng hình nằm trên nền ảnh uc7_loading_time_1 -->
+        <div id="menu" class="screen active p-6 flex flex-col justify-center gap-4">
+            <div onclick="show('f1_check')" class="invisible-btn"></div>
+            <div onclick="show('f2_check')" class="invisible-btn"></div>
+            <div onclick="show('f3_check')" class="invisible-btn"></div>
+        </div>
+
+        <!-- Các màn hình chức năng -->
+        <div id="f1_check" class="screen"><img src="../../assets/images/uc07_check_fee_fl1.png" class="w-full h-full object-cover">
+            <div onclick="autoLoad('f1_load', 'f1_free')" class="hotspot" style="top: 51%; left: 8%; width: 85%; height: 6.5%;"></div>
+        </div>
+        <div id="f1_load" class="screen"><img src="../../assets/images/uc07_loading_fee_fl1.png" class="w-full h-full object-cover"></div>
+        <div id="f1_free" class="screen"><img src="../../assets/images/uc07_free_fl1.png" class="w-full h-full object-cover">
+            <div onclick="goToDashboard(true)" class="hotspot" style="top: 1%; left: 1%; width: 12%; height: 6%;"></div>
+        </div>
+
+        <div id="f2_check" class="screen"><img src="../../assets/images/uc07_check_fee_fl1.png" class="w-full h-full object-cover">
+            <div onclick="autoLoad('f2_load', 'f2_fail')" class="hotspot" style="top: 51%; left: 8%; width: 85%; height: 6.5%;"></div>
+        </div>
+        <div id="f2_load" class="screen"><img src="../../assets/images/uc07_loading_fee_fl1.png" class="w-full h-full object-cover"></div>
+        <div id="f2_fail" class="screen"><img src="../../assets/images/uc07_fail_fee_fl2.png" class="w-full h-full object-cover">
+            <div onclick="show('f2_check')" class="hotspot" style="top: 65%; left: 8%; width: 85%; height: 6.5%;"></div>
+            <div onclick="goToDashboard(false)" class="hotspot" style="top: 7%; left: 5%; width: 12%; height: 6%;"></div>
+        </div>
+
+        <div id="f3_check" class="screen"><img src="../../assets/images/uc07_check_fee_fl1.png" class="w-full h-full object-cover">
+            <div onclick="autoLoad('f3_load', 'f3_dept')" class="hotspot" style="top: 51%; left: 8%; width: 85%; height: 6.5%;"></div>
+        </div>
+        <div id="f3_load" class="screen"><img src="../../assets/images/uc07_loading_fee_fl1.png" class="w-full h-full object-cover"></div>
+        <div id="f3_dept" class="screen"><img src="../../assets/images/uc07_loading_dept_fl3.png" class="w-full h-full object-cover">
+            <div onclick="autoLoad('f3_connect', 'f3_success')" class="hotspot" style="top: 70%; left: 8%; width: 85%; height: 6.5%;"></div>
+        </div>
+        <div id="f3_connect" class="screen"><img src="../../assets/images/uc07_connect_bkpay_fl3.png" class="w-full h-full object-cover"></div>
+        <div id="f3_success" class="screen"><img src="../../assets/images/uc07_successful_fl3.png" class="w-full h-full object-cover">
+            <div onclick="goToDashboard(true)" class="hotspot" style="top: 81%; left: 5%; width: 91%; height: 6.5%;"></div>
+        </div>
+    </div>
+
+    <script>
+        function show(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function autoLoad(loadId, nextId) {
+            show(loadId);
+            setTimeout(() => { show(nextId); }, 1000);
+        }
+
+        function goToDashboard(isSuccess) {
+            if(isSuccess) {
+                localStorage.setItem('student_payment', 'success_' + Date.now());
+            }
+            window.location.href = '../common/uc01_login_mobile.html?return=true&success=' + isSuccess;
+        }
+    </script>
+</body>
+</html>
